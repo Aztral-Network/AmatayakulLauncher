@@ -1,0 +1,10 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "amatayakul-launcher",
+  "outputfilename": "AmatayakulLauncher",
+  "frontend:dir": "frontend",
+  "author": {
+    "name": "Amatayakul",
+    "email": ""
+  }
+}
