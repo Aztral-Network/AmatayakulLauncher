@@ -2,7 +2,7 @@
 
 Un launcher para https://github.com/Aztral-Network/amatayakul-client
 
-## Que hace al lanzar:
+## Que hace al lanzar
 
 Descarga ~
 
