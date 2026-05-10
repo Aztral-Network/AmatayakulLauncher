@@ -12,7 +12,7 @@ https://github.com/Aztral-Network/MaraInjector (mara.exe)
 
 Ejecuta ~
 
-powershell.exe .\mara.exe Minecraft.Win10.DX11.exe {APPDATA USUARIO}\roaming\amatayakul.dll
+powershell.exe .\mara.exe Minecraft.Win10.DX11.exe %appdata%\AmatayakulLauncher\client-sources/amatayakul.dll
 
 
 ## Previa
