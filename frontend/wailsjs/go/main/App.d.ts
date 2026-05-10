@@ -4,3 +4,5 @@
 export function GetMinecraftVersion():Promise<string>;
 
 export function PerformInjection(arg1:string):Promise<{[key: string]: any}>;
+
+export function SelectDLL():Promise<string>;

@@ -9,3 +9,7 @@ export function GetMinecraftVersion() {
 export function PerformInjection(arg1) {
   return window['go']['main']['App']['PerformInjection'](arg1);
 }
+
+export function SelectDLL() {
+  return window['go']['main']['App']['SelectDLL']();
+}
