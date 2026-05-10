@@ -2,6 +2,8 @@
 
 Un launcher para https://github.com/AnarchDevelopment/amatayakul-client
 
+**Discord**: zhenrikepvp_ (Henrike)
+
 ## Que hace al lanzar
 
 Descarga ~
