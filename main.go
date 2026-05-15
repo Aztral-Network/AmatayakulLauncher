@@ -300,12 +300,13 @@ func (a *App) SelectDLL() string {
 }
 
 type GitHubRelease struct {
-	Assets []struct {
+	TagName string `json:"tag_name"`
+	Assets  []struct {
 		BrowserDownloadURL string `json:"browser_download_url"`
 	} `json:"assets"`
 }
 
-func downloadGitHubReleaseAsset(repo string, dest string) error {
+func (a *App) ensureAssetUpdated(repo string, dest string, versionFile string) error {
 	apiURL := fmt.Sprintf("https://api.github.com/repos/%s/releases/latest", repo)
 	resp, err := http.Get(apiURL)
 	if err != nil {
@@ -321,21 +322,47 @@ func downloadGitHubReleaseAsset(repo string, dest string) error {
 		return fmt.Errorf("no assets found in latest release")
 	}
 
-	downloadURL := release.Assets[0].BrowserDownloadURL
-	out, err := os.Create(dest)
-	if err != nil {
-		return err
+	currentVersion := ""
+	if _, err := os.Stat(versionFile); err == nil {
+		vData, _ := os.ReadFile(versionFile)
+		currentVersion = strings.TrimSpace(string(vData))
 	}
-	defer out.Close()
 
-	dlResp, err := http.Get(downloadURL)
-	if err != nil {
-		return err
+	// Check if file exists too
+	_, fileErr := os.Stat(dest)
+
+	if currentVersion != release.TagName || os.IsNotExist(fileErr) {
+		runtime.LogInfof(a.ctx, "Updating asset %s: %s -> %s", filepath.Base(dest), currentVersion, release.TagName)
+		
+		// If file exists, try to delete it
+		if !os.IsNotExist(fileErr) {
+			_ = os.Remove(dest)
+		}
+
+		// Download
+		out, err := os.Create(dest)
+		if err != nil {
+			return err
+		}
+		
+		dlResp, err := http.Get(release.Assets[0].BrowserDownloadURL)
+		if err != nil {
+			out.Close()
+			return err
+		}
+		defer dlResp.Body.Close()
+
+		_, err = io.Copy(out, dlResp.Body)
+		out.Close() // Close before version write
+		if err != nil {
+			return err
+		}
+
+		// Save version
+		_ = os.WriteFile(versionFile, []byte(release.TagName), 0644)
 	}
-	defer dlResp.Body.Close()
 
-	_, err = io.Copy(out, dlResp.Body)
-	return err
+	return nil
 }
 
 func (a *App) updateChecker() {
@@ -421,12 +448,14 @@ func (a *App) PerformInjection(customDll string, skipLaunch bool) map[string]int
 	os.MkdirAll(launcherDir, 0755)
 
 	maraPath := filepath.Join(launcherDir, "mara.exe")
+	maraVersionPath := filepath.Join(launcherDir, "mara_version.txt")
 	var dllPath string
 
-	// 1. Check and download mara.exe if missing
-	if _, err := os.Stat(maraPath); os.IsNotExist(err) {
-		err := downloadGitHubReleaseAsset("AnarchDevelopment/MaraInjector", maraPath)
-		if err != nil {
+	// 1. Check and download mara.exe if missing or update needed
+	if err := a.ensureAssetUpdated("AnarchDevelopment/MaraInjector", maraPath, maraVersionPath); err != nil {
+		runtime.LogErrorf(a.ctx, "Failed to ensure mara injector is updated: %v", err)
+		// Fallback: check if it exists at least
+		if _, errS := os.Stat(maraPath); os.IsNotExist(errS) {
 			return map[string]interface{}{"success": false, "error": "Failed to download mara injector: " + err.Error()}
 		}
 	}
@@ -434,9 +463,11 @@ func (a *App) PerformInjection(customDll string, skipLaunch bool) map[string]int
 	// 2. Check and download default DLL if not using custom
 	if customDll == "" || customDll == "Default Amatayakul DLL" {
 		dllPath = filepath.Join(launcherDir, "amatayakul.dll")
-		if _, err := os.Stat(dllPath); os.IsNotExist(err) {
-			err := downloadGitHubReleaseAsset("AnarchDevelopment/AmatayakulDLL", dllPath)
-			if err != nil {
+		dllVersionPath := filepath.Join(launcherDir, "dll_version.txt")
+		if err := a.ensureAssetUpdated("AnarchDevelopment/AmatayakulDLL", dllPath, dllVersionPath); err != nil {
+			runtime.LogErrorf(a.ctx, "Failed to ensure default DLL is updated: %v", err)
+			// Fallback: check if it exists at least
+			if _, errS := os.Stat(dllPath); os.IsNotExist(errS) {
 				return map[string]interface{}{"success": false, "error": "Failed to download default DLL: " + err.Error()}
 			}
 		}
