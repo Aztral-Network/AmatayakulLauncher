@@ -149,16 +149,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        if (languageSelect) languageSelect.value = lang;
+        if (languageSelect) {
+            const selectedContent = languageSelect.querySelector('.select-content');
+            const itemsList = languageSelect.querySelector('.select-items');
+            
+            // Sync UI state
+            const targetItem = Array.from(itemsList.children).find(el => el.getAttribute('data-value') === lang);
+            if (targetItem && selectedContent) {
+                selectedContent.innerHTML = targetItem.innerHTML;
+            }
+        }
         localStorage.setItem('amatayakul_language', lang);
     }
 
     const savedLang = localStorage.getItem('amatayakul_language') || 'es';
     setLanguage(savedLang);
 
+    // Custom select interaction
     if (languageSelect) {
-        languageSelect.addEventListener('change', (e) => {
-            setLanguage(e.target.value);
+        const selected = languageSelect.querySelector('.select-selected');
+        const itemsList = languageSelect.querySelector('.select-items');
+
+        selected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageSelect.classList.toggle('active');
+            itemsList.classList.toggle('select-hide');
+        });
+
+        Array.from(itemsList.children).forEach(item => {
+            item.addEventListener('click', (e) => {
+                const lang = item.getAttribute('data-value');
+                setLanguage(lang);
+                languageSelect.classList.remove('active');
+                itemsList.classList.add('select-hide');
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            languageSelect.classList.remove('active');
+            itemsList.classList.add('select-hide');
         });
     }
 
