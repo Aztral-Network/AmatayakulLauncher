@@ -62,10 +62,10 @@
 
                 <nav class="sidebar-nav">
                     <button class="nav-btn active">
-                        <span>DASHBOARD</span>
+                        <span data-i18n="nav_dashboard">DASHBOARD</span>
                     </button>
                     <button class="nav-btn" id="btnSettings">
-                        <span>SETTINGS</span>
+                        <span data-i18n="nav_settings">SETTINGS</span>
                     </button>
                 </nav>
 
@@ -83,14 +83,14 @@
                     <div class="hero-section">
                         <!-- Launch Button -->
                         <button class="btn-enter" id="btnLaunch" disabled>
-                            <span class="enter-text">ENTER</span>
-                            <div class="enter-subtext">ASCEND TO AMATAYAKUL</div>
+                            <span class="enter-text" data-i18n="btn_enter">ENTER</span>
+                            <div class="enter-subtext" data-i18n="btn_enter_sub">ASCEND TO AMATAYAKUL</div>
                         </button>
 
                         <!-- Kill Button (shown when injected) -->
                         <button class="btn-kill" id="btnKill" style="display:none;">
-                            <span class="kill-text">KILL</span>
-                            <div class="kill-subtext">TERMINATE MINECRAFT</div>
+                            <span class="kill-text" data-i18n="btn_kill">KILL</span>
+                            <div class="kill-subtext" data-i18n="btn_kill_sub">TERMINATE MINECRAFT</div>
                         </button>
                     </div>
 
@@ -112,47 +112,58 @@
         <div class="modal-backdrop"></div>
         <div class="modal-card">
             <div class="modal-top">
-                <h3>Settings</h3>
+                <h3 data-i18n="settings_title">Settings</h3>
                 <button class="modal-close" id="closeSettings">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
             <div class="modal-form">
                 <div class="field">
-                    <label>Injected Payload</label>
+                    <label data-i18n="settings_language">Language</label>
+                    <div class="field-row">
+                        <select id="languageSelect" class="styled-select">
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="en">🇺🇸 English</option>
+                            <option value="pt">🇧🇷 Português (Brasil)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label data-i18n="settings_payload">Injected Payload</label>
                     <div class="field-row">
                         <input type="text" id="customDllPath" placeholder="Default Amatayakul DLL" readonly>
-                        <button class="field-btn" id="btnBrowse">Browse</button>
+                        <button class="field-btn" id="btnBrowse" data-i18n="settings_browse">Browse</button>
                     </div>
-                    <p class="field-info">Select a custom DLL to inject into Minecraft.</p>
+                    <p class="field-info" data-i18n="settings_payload_info">Select a custom DLL to inject into Minecraft.</p>
                 </div>
 
                 <div class="field field--expandable" id="updateCheckerField">
                     <div class="field-header" id="btnExpandUpdates">
-                        <label>Update Checker</label>
+                        <label data-i18n="settings_update_checker">Update Checker</label>
                         <svg class="chevron" id="chevronUpdates" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                     <div class="expand-content" id="updatesContent">
                         <div class="setting-item">
-                            <span class="setting-label">Check for Mara Injector</span>
+                            <span class="setting-label" data-i18n="settings_check_mara">Check for Mara Injector</span>
                             <div class="toggle-switch">
                                 <input type="checkbox" id="checkMaraUpdate" checked>
                                 <span class="toggle-slider"></span>
                             </div>
                         </div>
                         <div class="setting-item">
-                            <span class="setting-label">Check for Amatayakul DLL</span>
+                            <span class="setting-label" data-i18n="settings_check_dll">Check for Amatayakul DLL</span>
                             <div class="toggle-switch">
                                 <input type="checkbox" id="checkDllUpdate" checked>
                                 <span class="toggle-slider"></span>
                             </div>
                         </div>
                     </div>
-                    <p class="field-info">Toggle automatic updates for core components.</p>
+                    <p class="field-info" data-i18n="settings_update_info">Toggle automatic updates for core components.</p>
                 </div>
                 <div class="field-actions">
-                    <button class="btn-primary" id="btnSaveSettings">Save Changes</button>
-                    <button class="btn-outline" id="btnResetSettings">Reset to Default</button>
+                    <button class="btn-primary" id="btnSaveSettings" data-i18n="settings_save">Save Changes</button>
+                    <button class="btn-outline" id="btnResetSettings" data-i18n="settings_reset">Reset to Default</button>
                 </div>
             </div>
         </div>
@@ -163,13 +174,13 @@
         <div class="modal-backdrop"></div>
         <div class="modal-card modal-card--compact">
             <div class="modal-top">
-                <h3>Confirm Kill</h3>
+                <h3 data-i18n="kill_title">Confirm Kill</h3>
             </div>
             <div class="modal-form">
-                <p class="dialog-body">Are you sure? Killing the game process can cause <strong>progress loss</strong>.</p>
+                <p class="dialog-body" data-i18n="kill_desc">Are you sure? Killing the game process can cause <strong>progress loss</strong>.</p>
                 <div class="field-actions">
-                    <button class="btn-danger" id="btnConfirmKill">Kill Game</button>
-                    <button class="btn-outline" id="btnCancelKill">Cancel</button>
+                    <button class="btn-danger" id="btnConfirmKill" data-i18n="kill_confirm">Kill Game</button>
+                    <button class="btn-outline" id="btnCancelKill" data-i18n="kill_cancel">Cancel</button>
                 </div>
             </div>
         </div>
@@ -180,13 +191,13 @@
         <div class="modal-backdrop"></div>
         <div class="modal-card modal-card--compact">
             <div class="modal-top">
-                <h3>Game Detected</h3>
+                <h3 data-i18n="detected_title">Game Detected</h3>
             </div>
             <div class="modal-form">
-                <p class="dialog-body">Game process detected and ready to inject. But we recommend you to launch the game via the launcher.</p>
+                <p class="dialog-body" data-i18n="detected_desc">Game process detected and ready to inject. But we recommend you to launch the game via the launcher.</p>
                 <div class="field-actions field-actions--col">
-                    <button class="btn-primary" id="btnRestartAndInject">↺ Restart and inject <span class="tag-recommended">Recommended</span></button>
-                    <button class="btn-outline" id="btnInjectAnyways">Inject anyways</button>
+                    <button class="btn-primary" id="btnRestartAndInject"><span data-i18n="detected_restart">↺ Restart and inject</span> <span class="tag-recommended" data-i18n="detected_recommended">Recommended</span></button>
+                    <button class="btn-outline" id="btnInjectAnyways" data-i18n="detected_inject_anyways">Inject anyways</button>
                 </div>
             </div>
         </div>

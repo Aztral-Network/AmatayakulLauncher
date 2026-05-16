@@ -46,6 +46,121 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateCheckerField = document.getElementById('updateCheckerField');
     const checkMaraUpdate    = document.getElementById('checkMaraUpdate');
     const checkDllUpdate     = document.getElementById('checkDllUpdate');
+    const languageSelect     = document.getElementById('languageSelect');
+
+    // ── Internationalization (i18n) ─────────────────────────
+    const translations = {
+        es: {
+            nav_dashboard: "PANEL",
+            nav_settings: "AJUSTES",
+            btn_enter: "ENTRAR",
+            btn_enter_sub: "ASCIENDE A AMATAYAKUL",
+            btn_kill: "MATAR",
+            btn_kill_sub: "TERMINAR MINECRAFT",
+            settings_title: "Ajustes",
+            settings_language: "Idioma",
+            settings_payload: "Carga Inyectada",
+            settings_browse: "Examinar",
+            settings_payload_info: "Seleccione una DLL personalizada para inyectar en Minecraft.",
+            settings_update_checker: "Comprobador de Actualizaciones",
+            settings_check_mara: "Verificar Mara Injector",
+            settings_check_dll: "Verificar Amatayakul DLL",
+            settings_update_info: "Alternar actualizaciones automáticas para componentes principales.",
+            settings_save: "Guardar Cambios",
+            settings_reset: "Restablecer por Defecto",
+            kill_title: "Confirmar Cierre",
+            kill_desc: "¿Estás seguro? Cerrar el proceso del juego puede causar <strong>pérdida de progreso</strong>.",
+            kill_confirm: "Cerrar Juego",
+            kill_cancel: "Cancelar",
+            detected_title: "Juego Detectado",
+            detected_desc: "Proceso del juego detectado y listo para inyectar. Pero recomendamos iniciar el juego a través del lanzador.",
+            detected_restart: "↺ Reiniciar e inyectar",
+            detected_recommended: "Recomendado",
+            detected_inject_anyways: "Inyectar de todos modos"
+        },
+        en: {
+            nav_dashboard: "DASHBOARD",
+            nav_settings: "SETTINGS",
+            btn_enter: "ENTER",
+            btn_enter_sub: "ASCEND TO AMATAYAKUL",
+            btn_kill: "KILL",
+            btn_kill_sub: "TERMINATE MINECRAFT",
+            settings_title: "Settings",
+            settings_language: "Language",
+            settings_payload: "Injected Payload",
+            settings_browse: "Browse",
+            settings_payload_info: "Select a custom DLL to inject into Minecraft.",
+            settings_update_checker: "Update Checker",
+            settings_check_mara: "Check for Mara Injector",
+            settings_check_dll: "Check for Amatayakul DLL",
+            settings_update_info: "Toggle automatic updates for core components.",
+            settings_save: "Save Changes",
+            settings_reset: "Reset to Default",
+            kill_title: "Confirm Kill",
+            kill_desc: "Are you sure? Killing the game process can cause <strong>progress loss</strong>.",
+            kill_confirm: "Kill Game",
+            kill_cancel: "Cancel",
+            detected_title: "Game Detected",
+            detected_desc: "Game process detected and ready to inject. But we recommend you to launch the game via the launcher.",
+            detected_restart: "↺ Restart and inject",
+            detected_recommended: "Recommended",
+            detected_inject_anyways: "Inject anyways"
+        },
+        pt: {
+            nav_dashboard: "PAINEL",
+            nav_settings: "CONFIGURAÇÕES",
+            btn_enter: "ENTRAR",
+            btn_enter_sub: "ASCENDA AO AMATAYAKUL",
+            btn_kill: "MATAR",
+            btn_kill_sub: "TERMINAR MINECRAFT",
+            settings_title: "Configurações",
+            settings_language: "Idioma",
+            settings_payload: "Carga Injetada",
+            settings_browse: "Procurar",
+            settings_payload_info: "Selecione uma DLL personalizada para injetar no Minecraft.",
+            settings_update_checker: "Verificador de Atualizações",
+            settings_check_mara: "Verificar Mara Injector",
+            settings_check_dll: "Verificar Amatayakul DLL",
+            settings_update_info: "Alternar atualizações automáticas para componentes principais.",
+            settings_save: "Salvar Alterações",
+            settings_reset: "Restaurar Padrões",
+            kill_title: "Confirmar Encerramento",
+            kill_desc: "Tem certeza? Encerrar o processo do jogo pode causar <strong>perda de progresso</strong>.",
+            kill_confirm: "Encerrar Jogo",
+            kill_cancel: "Cancelar",
+            detected_title: "Jogo Detectado",
+            detected_desc: "Processo do jogo detectado e pronto para injetar. Mas recomendamos iniciar o jogo através do iniciador.",
+            detected_restart: "↺ Reiniciar e injetar",
+            detected_recommended: "Recomendado",
+            detected_inject_anyways: "Injetar mesmo assim"
+        }
+    };
+
+    function setLanguage(lang) {
+        if (!translations[lang]) lang = 'es';
+        const dict = translations[lang];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (dict[key]) {
+                if (el.tagName.toLowerCase() === 'p' && dict[key].includes('<')) {
+                    el.innerHTML = dict[key];
+                } else {
+                    el.textContent = dict[key];
+                }
+            }
+        });
+        if (languageSelect) languageSelect.value = lang;
+        localStorage.setItem('amatayakul_language', lang);
+    }
+
+    const savedLang = localStorage.getItem('amatayakul_language') || 'es';
+    setLanguage(savedLang);
+
+    if (languageSelect) {
+        languageSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+    }
 
     // ── State ───────────────────────────────────────────────
     const REQUIRED_VERSION = '0.1510.0.0';
